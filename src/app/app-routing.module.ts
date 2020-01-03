@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ValueComponent } from './value/value.component';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
-    { path: '', component: ValueComponent },
+    { path: '', component: HomeComponent },
+    { path: 'register', component: RegisterComponent },
     { path: '**', redirectTo: '' },
 ];
 

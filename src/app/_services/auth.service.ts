@@ -24,4 +24,8 @@ export class AuthService {
     logout() {
         localStorage.removeItem('token');
     }
+
+    register(model: any) {
+        return this.http.post(`${this.baseUrl}/register`, model);
+    }
 }

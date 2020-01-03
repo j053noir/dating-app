@@ -1,1 +1,39 @@
-<p>register works!</p>
+<form #registerForm="ngForm" class="container" (ngSubmit)="register()">
+    <h2 class="text-center text-primary">Sign Up</h2>
+    <hr />
+
+    <div class="form-group">
+        <input
+            type="text"
+            class="form-control"
+            required
+            name="Username"
+            [(ngModel)]="model.Username"
+            placeholder="Username"
+        />
+    </div>
+
+    <div class="form-group">
+        <input
+            type="password"
+            class="form-control"
+            required
+            name="Password"
+            [(ngModel)]="model.Password"
+            placeholder="Password"
+        />
+    </div>
+
+    <div class="form-group text-center">
+        <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!registerForm.valid"
+        >
+            Register
+        </button>
+        <button type="reset" class="btn btn-default" (click)="cancel()">
+            Cancel
+        </button>
+    </div>
+</form>
