@@ -19,7 +19,7 @@
     <ul class="navbar-nav ml-auto" *ngIf="loggedIn; else loggedOut">
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle">
-                Welcome User
+                Welcome {{ username | titlecase }}
             </a>
 
             <div class="dropdown-menu">

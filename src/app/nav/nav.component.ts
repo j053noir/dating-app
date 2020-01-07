@@ -10,6 +10,7 @@ import { AlertifyService } from '../_services/alertify.service';
 export class NavComponent implements OnInit {
     loggedIn = false;
     model: any = {};
+    username = 'User';
 
     constructor(
         private authService: AuthService,
@@ -18,6 +19,9 @@ export class NavComponent implements OnInit {
 
     ngOnInit() {
         this.loggedIn = this.authService.loggedIn();
+        if (this.loggedIn) {
+            this.username = this.authService.decodedToken.unique_name;
+        }
     }
 
     login() {
@@ -25,10 +29,12 @@ export class NavComponent implements OnInit {
         this.authService.login(this.model).subscribe(
             () => {
                 this.alertifyService.success('logged in successfully');
+                this.username = this.authService.decodedToken.unique_name;
                 this.loggedIn = true;
             },
             err => {
                 this.alertifyService.error(err);
+                this.username = this.authService.decodedToken.unique_name;
                 this.loggedIn = false;
             }
         );
@@ -36,6 +42,7 @@ export class NavComponent implements OnInit {
 
     logout() {
         this.authService.logout();
+        this.username = 'User';
         this.loggedIn = false;
     }
 }
