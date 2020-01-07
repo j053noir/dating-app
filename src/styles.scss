@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'assets/minty/variables';
 @import '~bootstrap/scss/bootstrap.scss';
+@import 'assets/minty/bootswatch';
+
 $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome.scss';
+
 @import '~alertifyjs/build/css/alertify.css';
 @import '~alertifyjs/build/css/themes/bootstrap.css';
