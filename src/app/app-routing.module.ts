@@ -7,11 +7,28 @@ import { MemberListComponent } from './member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RegisterComponent } from './register/register.component';
 
+import { AuthGuard } from './_guards/auth.guard';
+
 const routes: Routes = [
-    { path: '', component: HomeComponent, pathMatch: 'full' },
-    { path: 'lists', component: ListsComponent },
-    { path: 'members', component: MemberListComponent },
-    { path: 'messages', component: MessagesComponent },
+    { path: '', component: HomeComponent },
+    {
+        path: '',
+        runGuardsAndResolvers: 'always',
+        canActivate: [AuthGuard],
+        children: [
+            { path: 'lists', component: ListsComponent },
+            {
+                path: 'members',
+                component: MemberListComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: 'messages',
+                component: MessagesComponent,
+                canActivate: [AuthGuard],
+            },
+        ],
+    },
     { path: 'register', component: RegisterComponent },
     { path: '**', redirectTo: '' },
 ];
