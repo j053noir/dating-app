@@ -8,3 +8,70 @@ $fa-font-path: '~font-awesome/fonts';
 
 @import '~alertifyjs/build/css/alertify.css';
 @import '~alertifyjs/build/css/themes/bootstrap.css';
+
+%extend_1 {
+    border: 0;
+    background: none !important;
+    color: #333333;
+}
+
+.tab-panel {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.nav-tabs > li.open {
+    border-bottom: 4px solid #fbcdcf;
+}
+
+.member-tabset > {
+    .tab-content {
+        margin-top: -3px;
+        background-color: $white;
+        border: 0;
+        border-top: 1px solid #eee;
+        padding: 15px 0;
+    }
+
+    .nav-tabs > li {
+        &:hover {
+            border-bottom: 4px solid #fbcdcf;
+
+            > a {
+                @extend %extend_1;
+                > i {
+                    color: #a6a6a6;
+                }
+            }
+            .dropdown-menu {
+                margin-top: 0;
+            }
+        }
+
+        &.open {
+            > a {
+                @extend %extend_1;
+                > i {
+                    color: #a6a6a6;
+                }
+            }
+            .dropdown-menu {
+                margin-top: 0;
+            }
+        }
+
+        &.active {
+            border-bottom: 4px solid $secondary;
+            position: relative;
+
+            > a {
+                border: 0 !important;
+                color: #333333;
+                > i {
+                    color: #404040;
+                }
+            }
+        }
+    }
+}

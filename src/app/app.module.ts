@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 
 import { environment } from 'src/environments/environment';
 
@@ -44,6 +44,7 @@ export function tokenGetter() {
         BrowserModule,
         BrowserAnimationsModule,
         BsDropdownModule.forRoot(),
+        TabsModule.forRoot(),
         HttpClientModule,
         FormsModule,
         AppRoutingModule,
