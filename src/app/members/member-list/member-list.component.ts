@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '../../_models/user';
-import { AlertifyService } from '../../_services/alertify.service';
-import { UserService } from '../../_services/user.service';
 
 @Component({
     selector: 'app-member-list',
@@ -11,31 +10,19 @@ import { UserService } from '../../_services/user.service';
 })
 export class MemberListComponent implements OnInit, OnDestroy {
     users: User[];
-    usersSubscription: Subscription;
+    routeSubscription: Subscription;
 
-    constructor(
-        private userService: UserService,
-        private alerity: AlertifyService
-    ) {}
+    constructor(private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.loadUsers();
+        this.routeSubscription = this.route.data.subscribe(data => {
+            this.users = data.users;
+        });
     }
 
     ngOnDestroy(): void {
-        if (this.usersSubscription) {
-            this.usersSubscription.unsubscribe();
+        if (this.routeSubscription) {
+            this.routeSubscription.unsubscribe();
         }
-    }
-
-    loadUsers() {
-        this.usersSubscription = this.userService.getUsers().subscribe(
-            (users: User[]) => {
-                this.users = users;
-            },
-            err => {
-                this.alerity.error(err);
-            }
-        );
     }
 }
