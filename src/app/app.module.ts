@@ -24,6 +24,11 @@ import { AuthService } from './_services/auth.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { UserService } from './_services/user.service';
 
+import { AuthGuard } from './_guards/auth.guard';
+
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
+
 export function tokenGetter() {
     return localStorage.getItem(environment.tokenName);
 }
@@ -56,7 +61,14 @@ export function tokenGetter() {
             },
         }),
     ],
-    providers: [AuthService, UserService, ErrorInterceptorProvider],
+    providers: [
+        AuthService,
+        UserService,
+        ErrorInterceptorProvider,
+        AuthGuard,
+        MemberListResolver,
+        MemberDetailResolver,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

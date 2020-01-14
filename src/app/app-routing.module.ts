@@ -10,6 +10,9 @@ import { RegisterComponent } from './register/register.component';
 
 import { AuthGuard } from './_guards/auth.guard';
 
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
+
 const routes: Routes = [
     { path: '', component: HomeComponent },
     {
@@ -21,8 +24,16 @@ const routes: Routes = [
             {
                 path: 'members',
                 children: [
-                    { path: ':id', component: MemberDetailComponent },
-                    { path: '', component: MemberListComponent },
+                    {
+                        path: ':id',
+                        component: MemberDetailComponent,
+                        resolve: { user: MemberDetailResolver },
+                    },
+                    {
+                        path: '',
+                        component: MemberListComponent,
+                        resolve: { users: MemberListResolver },
+                    },
                 ],
             },
             {
