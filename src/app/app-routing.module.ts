@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RegisterComponent } from './register/register.component';
@@ -11,6 +12,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './_guards/auth.guard';
 
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 const routes: Routes = [
@@ -24,6 +26,11 @@ const routes: Routes = [
             {
                 path: 'members',
                 children: [
+                    {
+                        path: 'edit',
+                        component: MemberEditComponent,
+                        resolve: { user: MemberEditResolver },
+                    },
                     {
                         path: ':id',
                         component: MemberDetailComponent,
