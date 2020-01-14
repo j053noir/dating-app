@@ -28,6 +28,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './_guards/auth.guard';
 
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 import { AuthService } from './_services/auth.service';
@@ -79,6 +80,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         ErrorInterceptorProvider,
         AuthGuard,
         MemberListResolver,
+        MemberEditResolver,
         MemberDetailResolver,
         { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
     ],
