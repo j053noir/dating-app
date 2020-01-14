@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { Subscription } from 'rxjs';
@@ -30,5 +30,12 @@ export class MemberEditComponent implements OnInit {
         console.log(this.user);
         this.alertify.success('Profile updated successfully');
         this.editForm.reset(this.user);
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    unloadNotification($event: any) {
+        if (this.editForm.dirty) {
+            $event.returnValue = true;
+        }
     }
 }
