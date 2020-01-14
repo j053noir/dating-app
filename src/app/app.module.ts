@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 import { environment } from 'src/environments/environment';
 
@@ -53,6 +54,7 @@ export function tokenGetter() {
         HttpClientModule,
         FormsModule,
         AppRoutingModule,
+        NgxGalleryModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter,
