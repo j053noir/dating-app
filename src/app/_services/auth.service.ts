@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +13,7 @@ export class AuthService {
     decodedToken: any;
 
     constructor(private http: HttpClient) {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(environment.tokenName);
         if (token && this.loggedIn) {
             this.decodedToken = this.jwtHelper.decodeToken(token);
         }
@@ -23,7 +23,7 @@ export class AuthService {
         return this.http.post(`${this.baseUrl}/login`, model).pipe(
             map((response: any) => {
                 if (response) {
-                    localStorage.setItem('token', response.token);
+                    localStorage.setItem(environment.tokenName, response.token);
                     this.decodedToken = this.jwtHelper.decodeToken(
                         response.token
                     );
@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     logout() {
-        localStorage.removeItem('token');
+        localStorage.removeItem(environment.tokenName);
     }
 
     register(model: any) {
@@ -42,7 +42,7 @@ export class AuthService {
     }
 
     loggedIn() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(environment.tokenName);
         return !this.jwtHelper.isTokenExpired(token);
     }
 }
