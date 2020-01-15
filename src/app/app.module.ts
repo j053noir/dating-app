@@ -24,6 +24,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { NavComponent } from './nav/nav.component';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { RegisterComponent } from './register/register.component';
 
 import { AuthGuard } from './_guards/auth.guard';
@@ -59,6 +60,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         MemberCardComponent,
         MemberDetailComponent,
         MemberEditComponent,
+        PhotoEditorComponent,
     ],
     imports: [
         BrowserModule,

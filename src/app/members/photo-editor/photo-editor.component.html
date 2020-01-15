@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-sm-2" *ngFor="let photo of photos">
+        <img [src]="photo.url" class="img-thumbnail p-1" alt="" />
+        <div class="text-center">
+            <button
+                class="btn btn-sm btn-primary"
+                [disabled]="photo.isMain"
+                title="main"
+            >
+                <i class="fa fa-star"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" title="delete">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
