@@ -8,6 +8,7 @@ import {
 } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
+import { FileUploadModule } from 'ng2-file-upload';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { NgxGalleryModule } from 'ngx-gallery';
 
@@ -22,9 +23,9 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { MessagesComponent } from './messages/messages.component';
 import { NavComponent } from './nav/nav.component';
-import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { RegisterComponent } from './register/register.component';
 
 import { AuthGuard } from './_guards/auth.guard';
@@ -71,6 +72,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         FormsModule,
         AppRoutingModule,
         NgxGalleryModule,
+        FileUploadModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter,
