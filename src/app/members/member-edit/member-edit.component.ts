@@ -51,4 +51,8 @@ export class MemberEditComponent implements OnInit {
             $event.returnValue = true;
         }
     }
+
+    updateMainPhoto(photoUrl: string) {
+        this.user.photoUrl = photoUrl;
+    }
 }

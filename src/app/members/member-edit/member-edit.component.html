@@ -111,6 +111,7 @@
                         <h4>Edit Photos</h4>
                         <app-photo-editor
                             [photos]="user.photos"
+                            (getMemberPhotoChanged)="updateMainPhoto($event)"
                         ></app-photo-editor>
                     </tab>
                 </tabset>
