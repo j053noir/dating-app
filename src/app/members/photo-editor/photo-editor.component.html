@@ -1,10 +1,12 @@
 <div class="row">
     <div class="col-sm-2" *ngFor="let photo of photos">
         <img [src]="photo.url" class="img-thumbnail p-1" alt="" />
-        <div class="text-center">
+        <div class="d-flex justify-content-around">
             <button
-                class="btn btn-sm btn-primary"
+                class="btn btn-sm"
                 [disabled]="photo.isMain"
+                [ngClass]="photo.isMain ? 'btn-primary' : 'btn-outline-primary'"
+                (click)="setMainPhoto(photo)"
                 title="main"
             >
                 <i class="fa fa-star"></i>

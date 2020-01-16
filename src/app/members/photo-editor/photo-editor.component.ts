@@ -1,23 +1,46 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Photo } from 'src/app/_models/photo';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
+import { Photo } from 'src/app/_models/photo';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-photo-editor',
     templateUrl: './photo-editor.component.html',
     styleUrls: ['./photo-editor.component.scss'],
 })
-export class PhotoEditorComponent implements OnInit {
+export class PhotoEditorComponent implements OnInit, OnDestroy {
     @Input() photos: Photo[];
+    @Output() getMemberPhotoChanged = new EventEmitter<string>();
+
     uploader: FileUploader;
     hasBaseDropZoneOver = false;
+    mainPhotoSubscription: Subscription;
 
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+        private alertify: AlertifyService
+    ) {}
 
     ngOnInit() {
         this.initializeUploader();
+    }
+
+    ngOnDestroy() {
+        if (this.mainPhotoSubscription) {
+            this.mainPhotoSubscription.unsubscribe();
+        }
     }
 
     fileOverBase(e) {
@@ -52,5 +75,21 @@ export class PhotoEditorComponent implements OnInit {
                 this.photos.push(photo);
             }
         };
+    }
+
+    setMainPhoto(photo: Photo) {
+        this.mainPhotoSubscription = this.userService
+            .setMainPhoto(this.authService.decodedToken.nameid, photo.id)
+            .subscribe(
+                () => {
+                    const index = this.photos.findIndex(p => p.isMain);
+                    this.photos[index].isMain = false;
+                    photo.isMain = true;
+                    this.getMemberPhotoChanged.emit(photo.url);
+                },
+                err => {
+                    this.alertify.error(err);
+                }
+            );
     }
 }
