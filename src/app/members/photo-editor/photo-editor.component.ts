@@ -86,6 +86,7 @@ export class PhotoEditorComponent implements OnInit, OnDestroy {
                     this.photos[index].isMain = false;
                     photo.isMain = true;
                     this.getMemberPhotoChanged.emit(photo.url);
+                    this.authService.changeMemberPhoto(photo.url);
                 },
                 err => {
                     this.alertify.error(err);
