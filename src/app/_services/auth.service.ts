@@ -2,9 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
+
+export const defaultUser: User = {
+    age: null,
+    city: null,
+    country: null,
+    created: null,
+    gender: null,
+    id: null,
+    knownAs: 'User',
+    lastActive: null,
+    photoUrl: '../../assets/images/user.png',
+    username: 'User',
+};
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +27,7 @@ export class AuthService {
     baseUrl = `${environment.apiUrl}/auth`;
     jwtHelper = new JwtHelperService();
     decodedToken: any;
-    currentUser: User;
+    currentUser = new BehaviorSubject<User>(defaultUser);
 
     constructor(private http: HttpClient, private router: Router) {
         const token = localStorage.getItem(environment.tokenName);
@@ -23,9 +37,19 @@ export class AuthService {
             const user = localStorage.getItem(environment.userObjName);
 
             if (user) {
-                this.currentUser = JSON.parse(user) as User;
+                this.currentUser.next(JSON.parse(user) as User);
             }
         }
+    }
+
+    user(): Observable<User> {
+        return this.currentUser.asObservable();
+    }
+
+    changeMemberPhoto(photoUrl: string) {
+        const currentUser = { ...this.currentUser.value };
+        currentUser.photoUrl = photoUrl;
+        this.currentUser.next(currentUser);
     }
 
     login(model: any) {
@@ -40,8 +64,7 @@ export class AuthService {
                     this.decodedToken = this.jwtHelper.decodeToken(
                         response.token
                     );
-                    this.currentUser = response.user;
-                    console.log(this.decodedToken);
+                    this.currentUser.next(response.user as User);
                 }
             })
         );
@@ -51,7 +74,7 @@ export class AuthService {
         localStorage.removeItem(environment.tokenName);
         localStorage.removeItem(environment.userObjName);
         this.decodedToken = null;
-        this.currentUser = null;
+        this.currentUser.next(defaultUser);
         this.router.navigate(['/']);
     }
 
