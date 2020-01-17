@@ -7,6 +7,7 @@ export const environment = {
     hostUrl: 'localhost:5000',
     apiUrl: '//localhost:5000/api',
     tokenName: 'token',
+    userObjName: 'user',
 };
 
 /*
