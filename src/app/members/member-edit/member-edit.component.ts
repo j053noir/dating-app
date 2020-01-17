@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -12,7 +18,7 @@ import { UserService } from 'src/app/_services/user.service';
     templateUrl: './member-edit.component.html',
     styleUrls: ['./member-edit.component.scss'],
 })
-export class MemberEditComponent implements OnInit {
+export class MemberEditComponent implements OnInit, OnDestroy {
     @ViewChild('editForm', { static: false }) editForm: NgForm;
     user: User;
     routeSubscription: Subscription;
@@ -21,7 +27,7 @@ export class MemberEditComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private authService: AuthService,
-        private userSerive: UserService,
+        private userService: UserService,
         private alertify: AlertifyService
     ) {}
 
@@ -29,10 +35,27 @@ export class MemberEditComponent implements OnInit {
         this.routeSubscription = this.route.data.subscribe(data => {
             this.user = data.user;
         });
+        this.userSubscription = this.authService.user().subscribe(
+            user => {
+                this.user.photoUrl = user.photoUrl;
+            },
+            err => {
+                this.alertify.error(err);
+            }
+        );
+    }
+
+    ngOnDestroy() {
+        if (this.routeSubscription) {
+            this.routeSubscription.unsubscribe();
+        }
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
     }
 
     onSubmit() {
-        this.userSerive
+        this.userService
             .updateUser(this.authService.decodedToken.nameid, this.user)
             .subscribe(
                 () => {
