@@ -21,7 +21,10 @@
         >
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" dropdownToggle>
-                    Welcome {{ username | titlecase }}
+                    <span class="mr-1">
+                        <img [src]="user.photoUrl" [alt]="user.knownAs" />
+                    </span>
+                    Welcome {{ user.username | titlecase }}
                 </a>
 
                 <div class="dropdown-menu" *dropdownMenu>
