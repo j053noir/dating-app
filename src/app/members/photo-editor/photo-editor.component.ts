@@ -26,6 +26,7 @@ export class PhotoEditorComponent implements OnInit, OnDestroy {
     uploader: FileUploader;
     hasBaseDropZoneOver = false;
     mainPhotoSubscription: Subscription;
+    deletePhotoSubscription: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -40,6 +41,9 @@ export class PhotoEditorComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.mainPhotoSubscription) {
             this.mainPhotoSubscription.unsubscribe();
+        }
+        if (this.deletePhotoSubscription) {
+            this.deletePhotoSubscription.unsubscribe();
         }
     }
 
@@ -92,5 +96,27 @@ export class PhotoEditorComponent implements OnInit, OnDestroy {
                     this.alertify.error(err);
                 }
             );
+    }
+
+    deletePhoto(photo: Photo) {
+        this.alertify.confirm(
+            'Are you sure you want to delete this photo?',
+            () => {
+                this.deletePhotoSubscription = this.userService
+                    .deletePhoto(this.authService.decodedToken.nameid, photo.id)
+                    .subscribe(
+                        () => {
+                            this.photos.splice(
+                                this.photos.findIndex(p => p.id === photo.id),
+                                1
+                            );
+                            this.alertify.success('Photo has been deleted');
+                        },
+                        err => {
+                            this.alertify.error(err);
+                        }
+                    );
+            }
+        );
     }
 }
