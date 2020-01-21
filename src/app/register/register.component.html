@@ -1,27 +1,187 @@
-<form #registerForm="ngForm" class="container" (ngSubmit)="register()">
+<form [formGroup]="registerForm" class="container" (ngSubmit)="register()">
     <h2 class="text-center text-primary">Sign Up</h2>
     <hr />
+
+    <div class="form-group">
+        <label class="control-label" style="margin-right:10px">I am a: </label>
+        <label class="radio-inline">
+            <input
+                class="mr-3"
+                type="radio"
+                value="female"
+                formControlName="gender"
+            />Female
+        </label>
+        <label class="radio-inline ml-3">
+            <input
+                class="mr-3"
+                type="radio"
+                value="male"
+                formControlName="gender"
+            />Male
+        </label>
+    </div>
 
     <div class="form-group">
         <input
             type="text"
             class="form-control"
-            required
-            name="Username"
-            [(ngModel)]="model.Username"
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.username.touched &&
+                    registerForm.controls?.username.invalid
+            }"
+            formControlName="username"
             placeholder="Username"
         />
+        <div class="invalid-feedback">Username is required.</div>
+    </div>
+
+    <div class="form-group">
+        <input
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.knownAs.touched &&
+                    registerForm.controls?.knownAs.invalid
+            }"
+            class="form-control"
+            placeholder="Known as"
+            formControlName="knownAs"
+        />
+        <div
+            class="invalid-feedback"
+            *ngIf="
+                registerForm.controls?.knownAs.touched &&
+                registerForm.controls?.knownAs.hasError('required')
+            "
+        >
+            Known as is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.dateOfBirth.touched &&
+                    registerForm.controls?.dateOfBirth.invalid
+            }"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            class="form-control"
+            placeholder="Date of Birth"
+            formControlName="dateOfBirth"
+            type="text"
+        />
+        <div
+            class="invalid-feedback"
+            *ngIf="
+                registerForm.controls?.dateOfBirth.touched &&
+                registerForm.controls?.dateOfBirth.hasError('required')
+            "
+        >
+            Date of Birth is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.city.touched &&
+                    registerForm.controls?.city.invalid
+            }"
+            class="form-control"
+            placeholder="City"
+            formControlName="city"
+        />
+        <div
+            class="invalid-feedback"
+            *ngIf="
+                registerForm.controls?.city.touched &&
+                registerForm.controls?.city.hasError('required')
+            "
+        >
+            City is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.country.touched &&
+                    registerForm.controls?.country.invalid
+            }"
+            class="form-control"
+            placeholder="Country"
+            formControlName="country"
+        />
+        <div
+            class="invalid-feedback"
+            *ngIf="
+                registerForm.controls?.country.touched &&
+                registerForm.controls?.country.hasError('required')
+            "
+        >
+            Country is required.
+        </div>
     </div>
 
     <div class="form-group">
         <input
             type="password"
             class="form-control"
-            required
-            name="Password"
-            [(ngModel)]="model.Password"
+            [ngClass]="{
+                'is-invalid':
+                    registerForm.controls?.password.touched &&
+                    registerForm.controls?.password.invalid
+            }"
+            formControlName="password"
             placeholder="Password"
         />
+        <div
+            class="invalid-feedback"
+            *ngIf="registerForm.controls?.password.hasError('required')"
+        >
+            Password is required.
+        </div>
+        <div
+            class="invalid-feedback"
+            *ngIf="registerForm.controls?.password.hasError('minlength')"
+        >
+            Password must be at least 4 characters.
+        </div>
+        <div
+            class="invalid-feedback"
+            *ngIf="registerForm.controls?.password.hasError('maxlength')"
+        >
+            Password cannot exceed 8 characters.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input
+            type="password"
+            class="form-control"
+            [ngClass]="{
+                'is-invalid':
+                    (registerForm.controls?.confirmPassword.touched &&
+                        registerForm.controls?.confirmPassword.invalid) ||
+                    registerForm.hasError('mismatch')
+            }"
+            formControlName="confirmPassword"
+            placeholder="Confirm Password"
+        />
+        <div
+            class="invalid-feedback"
+            *ngIf="registerForm.controls?.confirmPassword.hasError('required')"
+        >
+            Confirm password is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="registerForm.hasError('mismatch')">
+            Passwords must match.
+        </div>
     </div>
 
     <div class="form-group text-center">
@@ -32,7 +192,7 @@
         >
             Register
         </button>
-        <button type="reset" class="btn btn-default" (click)="cancel()">
+        <button type="reset" class="btn btn-link" (click)="cancel()">
             Cancel
         </button>
     </div>
