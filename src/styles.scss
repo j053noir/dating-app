@@ -9,6 +9,9 @@ $fa-font-path: '~font-awesome/fonts';
 @import '~alertifyjs/build/css/alertify.css';
 @import '~alertifyjs/build/css/themes/bootstrap.css';
 
+$theme-green: $primary;
+@import '~ngx-bootstrap/datepicker/bs-datepicker.scss';
+
 %extend_1 {
     border: 0;
     background: none !important;
