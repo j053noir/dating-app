@@ -15,6 +15,7 @@ export class NavComponent implements OnInit, OnDestroy {
     model: any = {};
     user: User;
     userSubscription: Subscription;
+    loggedInSubscription: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -23,7 +24,11 @@ export class NavComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.loggedIn = this.authService.loggedIn();
+        this.loggedInSubscription = this.authService
+            .status()
+            .subscribe(loggedIn => {
+                this.loggedIn = loggedIn;
+            });
         this.userSubscription = this.authService.user().subscribe(
             user => {
                 this.user = user;
@@ -38,18 +43,18 @@ export class NavComponent implements OnInit, OnDestroy {
         if (this.userSubscription) {
             this.userSubscription.unsubscribe();
         }
+        if (this.loggedInSubscription) {
+            this.loggedInSubscription.unsubscribe();
+        }
     }
 
     login() {
-        this.loggedIn = false;
         this.authService.login(this.model).subscribe(
             () => {
                 this.alertifyService.success('logged in successfully');
-                this.loggedIn = true;
             },
             err => {
                 this.alertifyService.error(err);
-                this.loggedIn = false;
                 this.authService.logout();
             },
             () => {
@@ -65,7 +70,6 @@ export class NavComponent implements OnInit, OnDestroy {
     logout() {
         this.authService.logout();
         this.user = null;
-        this.loggedIn = false;
         this.router.navigate(['/']);
     }
 }
