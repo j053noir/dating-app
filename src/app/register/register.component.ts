@@ -6,10 +6,13 @@ import {
     Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { Subscription, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { User } from '../_models/user';
 import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
-import { BsDatepickerConfig } from 'ngx-bootstrap';
 
 @Component({
     selector: 'app-register',
@@ -19,14 +22,15 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 export class RegisterComponent implements OnInit, OnDestroy {
     @Output() cancelRegister = new EventEmitter();
     registerSubscription: Subscription;
-    model: any = {};
+    user: User;
     registerForm: FormGroup;
     bsConfig: Partial<BsDatepickerConfig>;
 
     constructor(
         private authService: AuthService,
         private alertifyService: AlertifyService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -75,18 +79,35 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
 
     register() {
-        this.registerSubscription = this.authService
-            .register(this.registerForm.value)
-            .subscribe(
-                () => {
-                    this.alertifyService.success(
-                        'User registered successfully'
-                    );
-                },
-                err => {
-                    this.alertifyService.error(err);
-                }
-            );
+        if (this.registerForm.valid) {
+            this.user = { ...this.registerForm.value };
+            this.registerSubscription = this.authService
+                .register(this.user)
+                .pipe(
+                    switchMap(response => {
+                        if (response && response.id != null) {
+                            return this.authService.login({
+                                username: this.user.username,
+                                password: this.user.password,
+                            });
+                        }
+                        return throwError(
+                            'There was a problem creating your user.'
+                        );
+                    })
+                )
+                .subscribe(
+                    () => {
+                        this.alertifyService.success(
+                            'Registration successfully'
+                        );
+                        this.router.navigate(['/members']);
+                    },
+                    err => {
+                        this.alertifyService.error(err);
+                    }
+                );
+        }
     }
 
     cancel() {
