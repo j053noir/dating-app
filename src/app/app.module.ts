@@ -18,6 +18,8 @@ import { NgxGalleryModule } from 'ngx-gallery';
 
 import { environment } from 'src/environments/environment';
 
+import { TimeAgoPipe } from 'time-ago-pipe';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -66,6 +68,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         MemberDetailComponent,
         MemberEditComponent,
         PhotoEditorComponent,
+        TimeAgoPipe,
     ],
     imports: [
         BrowserModule,
