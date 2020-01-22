@@ -7,18 +7,10 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
-export const defaultUser: User = {
-    age: null,
-    city: null,
-    country: null,
-    created: null,
-    gender: null,
-    id: null,
-    knownAs: 'User',
-    lastActive: null,
-    photoUrl: '../../assets/images/user.png',
-    username: 'User',
-};
+export interface LoginModel {
+    username: string;
+    password: string;
+}
 
 @Injectable({
     providedIn: 'root',
@@ -27,11 +19,14 @@ export class AuthService {
     baseUrl = `${environment.apiUrl}/auth`;
     jwtHelper = new JwtHelperService();
     decodedToken: any;
-    currentUser = new BehaviorSubject<User>(defaultUser);
+    private currentUser = new BehaviorSubject<User>(null);
+    private loggedIn = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient, private router: Router) {
         const token = localStorage.getItem(environment.tokenName);
-        if (token && this.loggedIn) {
+        if (token && this.verifyToken) {
+            this.loggedIn.next(true);
+
             this.decodedToken = this.jwtHelper.decodeToken(token);
 
             const user = localStorage.getItem(environment.userObjName);
@@ -52,7 +47,7 @@ export class AuthService {
         this.currentUser.next(currentUser);
     }
 
-    login(model: any) {
+    login(model: LoginModel) {
         return this.http.post(`${this.baseUrl}/login`, model).pipe(
             map((response: any) => {
                 if (response) {
@@ -65,6 +60,7 @@ export class AuthService {
                         response.token
                     );
                     this.currentUser.next(response.user as User);
+                    this.loggedIn.next(true);
                 }
             })
         );
@@ -74,16 +70,21 @@ export class AuthService {
         localStorage.removeItem(environment.tokenName);
         localStorage.removeItem(environment.userObjName);
         this.decodedToken = null;
-        this.currentUser.next(defaultUser);
+        this.currentUser.next(null);
+        this.loggedIn.next(false);
         this.router.navigate(['/']);
     }
 
-    register(model: any) {
-        return this.http.post(`${this.baseUrl}/register`, model);
+    register(model: User) {
+        return this.http.post<User>(`${this.baseUrl}/register`, model);
     }
 
-    loggedIn() {
+    status() {
+        return this.loggedIn.asObservable();
+    }
+
+    verifyToken() {
         const token = localStorage.getItem(environment.tokenName);
-        return !this.jwtHelper.isTokenExpired(token);
+        return token ? !this.jwtHelper.isTokenExpired(token) : false;
     }
 }
