@@ -16,7 +16,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.routeSubscription = this.route.data.subscribe(data => {
-            this.users = data.users;
+            this.users = data.users.result;
         });
     }
 
