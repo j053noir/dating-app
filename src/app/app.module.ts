@@ -7,11 +7,13 @@ import {
     HAMMER_GESTURE_CONFIG,
 } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { JwtModule } from '@auth0/angular-jwt';
 import { FileUploadModule } from 'ng2-file-upload';
 import {
     BsDatepickerModule,
     BsDropdownModule,
+    PaginationModule,
     TabsModule,
 } from 'ngx-bootstrap';
 import { NgxGalleryModule } from 'ngx-gallery';
@@ -75,6 +77,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         BrowserAnimationsModule,
         BsDatepickerModule.forRoot(),
         BsDropdownModule.forRoot(),
+        PaginationModule.forRoot(),
         TabsModule.forRoot(),
         HttpClientModule,
         FormsModule,
