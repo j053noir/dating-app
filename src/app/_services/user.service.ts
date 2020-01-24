@@ -29,9 +29,19 @@ export class UserService {
         }
 
         if (userParams != null) {
-            params = params.append('minAge', userParams.minAge);
-            params = params.append('maxAge', userParams.maxAge);
-            params = params.append('gender', userParams.gender);
+            if (userParams.applyFilters) {
+                params = params.append('minAge', userParams.minAge);
+                params = params.append('maxAge', userParams.maxAge);
+                params = params.append('gender', userParams.gender);
+            }
+
+            if (userParams.orderBy && userParams.orderDirection) {
+                params = params.append('orderBy', userParams.orderBy);
+                params = params.append(
+                    'orderDirection',
+                    userParams.orderDirection
+                );
+            }
         }
 
         return this.http
