@@ -20,6 +20,12 @@ export class MemberListComponent implements OnInit, OnDestroy {
         { value: 'male', key: 'Males' },
         { value: 'female', key: 'Females' },
     ];
+    sortingList = [
+        { value: 'created', key: 'Creation', direction: 0 },
+        { value: 'known_as', key: 'Known As', direction: 0 },
+        { value: 'username', key: 'Username', direction: 0 },
+        { value: 'last_active', key: 'Activity', direction: 0 },
+    ];
     userParams: any = {};
     routeSubscription: Subscription;
     userSubscription: Subscription;
@@ -44,6 +50,8 @@ export class MemberListComponent implements OnInit, OnDestroy {
                 this.user.gender === 'male' ? 'female' : 'male';
             this.userParams.minAge = Math.floor(this.user.age / 2 + 7);
             this.userParams.maxAge = Math.ceil((this.user.age - 7) * 2);
+            this.userParams.orderBy = 'last_active';
+            this.userParams.orderDirection = 'descending';
         });
     }
 
@@ -61,7 +69,11 @@ export class MemberListComponent implements OnInit, OnDestroy {
 
     loadUsers() {
         this.usersSubscription = this.userService
-            .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage)
+            .getUsers(
+                this.pagination.currentPage,
+                this.pagination.itemsPerPage,
+                this.userParams
+            )
             .subscribe(
                 res => {
                     this.users = res.result;
@@ -83,21 +95,8 @@ export class MemberListComponent implements OnInit, OnDestroy {
     }
 
     applyFilters() {
-        this.usersSubscription = this.userService
-            .getUsers(
-                this.pagination.currentPage,
-                this.pagination.itemsPerPage,
-                this.userParams
-            )
-            .subscribe(
-                res => {
-                    this.users = res.result;
-                    this.pagination = res.pagination;
-                },
-                err => {
-                    this.alertify.error(err);
-                }
-            );
+        this.userParams.applyFilters = true;
+        this.loadUsers();
     }
 
     resetFilters() {
@@ -106,6 +105,25 @@ export class MemberListComponent implements OnInit, OnDestroy {
             this.user.gender === 'male' ? 'female' : 'male';
         this.userParams.minAge = Math.floor(this.user.age / 2 + 7);
         this.userParams.maxAge = Math.ceil((this.user.age - 7) * 2);
+        this.userParams.orderBy = 'last_active';
+        this.userParams.orderDirection = 'descending';
+        this.loadUsers();
+    }
+
+    sortUsers(index: number) {
+        const sortingEl = this.sortingList[index];
+
+        this.sortingList.map(s => {
+            if (s.value !== sortingEl.value) {
+                s.direction = 0;
+            }
+        });
+
+        this.userParams.orderBy = sortingEl.value;
+        this.sortingList[index].direction = sortingEl.direction >= 0 ? -1 : 1;
+        this.userParams.orderDirection =
+            sortingEl.direction >= 0 ? 'ascending' : 'descending';
+
         this.loadUsers();
     }
 }

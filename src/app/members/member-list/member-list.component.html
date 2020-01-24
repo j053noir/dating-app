@@ -63,6 +63,29 @@
                 <i class="fa fa-trash"></i>
             </button>
         </div>
+
+        <div class="col">
+            <div class="btn-group float-right">
+                <button
+                    *ngFor="let sortingEl of sortingList; let i = index"
+                    type="button"
+                    name="orderBy"
+                    class="btn btn-light"
+                    [(ngModel)]="userParams.orderBy"
+                    (click)="sortUsers(i)"
+                    btnRadio="{{ sortingEl.value }}"
+                >
+                    {{ sortingEl.key }}
+                    <i
+                        class="fa fa-sort"
+                        [ngClass]="{
+                            'fa-sort-desc': sortingEl.direction > 0,
+                            'fa-sort-asc': sortingEl.direction < 0
+                        }"
+                    ></i>
+                </button>
+            </div>
+        </div>
     </form>
 
     <div class="row mt-3">
