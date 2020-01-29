@@ -34,6 +34,8 @@ export class AuthService {
             if (user) {
                 this.currentUser.next(JSON.parse(user) as User);
             }
+        } else {
+            this.logout();
         }
     }
 

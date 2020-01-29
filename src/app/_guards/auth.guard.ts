@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
         }
 
         this.alertify.message('Please login to access the application.');
+        this.authService.logout();
         this.router.navigate(['/']);
 
         return false;
