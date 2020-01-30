@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
+import { Message } from '../_models/message';
 
 @Injectable({
     providedIn: 'root',
@@ -89,5 +90,44 @@ export class UserService {
 
     sendLike(userId: number, likeeId: number) {
         return this.http.post(`${this.baseUrl}/${userId}/like/${likeeId}`, {});
+    }
+
+    getMessages(
+        userId: number,
+        page?: number,
+        itemsPerPage?: number,
+        messageContainer?: any
+    ) {
+        const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<
+            Message[]
+        >();
+
+        let params = new HttpParams();
+
+        if (page != null && itemsPerPage != null) {
+            params = params.append('pageNumber', `${page}`);
+            params = params.append('pageSize', `${itemsPerPage}`);
+        }
+
+        if (messageContainer != null) {
+            params = params.append('messageContainer', messageContainer);
+        }
+
+        return this.http
+            .get<Message[]>(`${this.baseUrl}/${userId}/messages`, {
+                observe: 'response',
+                params,
+            })
+            .pipe(
+                map(response => {
+                    paginatedResult.result = response.body;
+
+                    if (response.headers.get('Pagination') != null) {
+                        paginatedResult.pagination = JSON.parse(
+                            response.headers.get('Pagination')
+                        );
+                    }
+                })
+            );
     }
 }
