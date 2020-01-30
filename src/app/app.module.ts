@@ -40,6 +40,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
+import { ListsResolver } from './_resolvers/lists.resolver';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
@@ -101,6 +102,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
         ErrorInterceptorProvider,
         AuthGuard,
         PreventUnsavedChangesGuard,
+        ListsResolver,
         MemberListResolver,
         MemberEditResolver,
         MemberDetailResolver,
