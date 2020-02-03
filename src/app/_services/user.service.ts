@@ -127,6 +127,8 @@ export class UserService {
                             response.headers.get('Pagination')
                         );
                     }
+
+                    return paginatedResult;
                 })
             );
     }
