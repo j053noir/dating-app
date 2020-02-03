@@ -54,7 +54,7 @@ const routes: Routes = [
             {
                 path: 'messages',
                 component: MessagesComponent,
-                resolve: MessagesResolver,
+                resolve: { messages: MessagesResolver },
             },
         ],
     },
