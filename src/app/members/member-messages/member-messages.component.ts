@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Message } from 'src/app/_models/message';
-import { UserService } from 'src/app/_services/user.service';
-import { AuthService } from 'src/app/_services/auth.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Message } from 'src/app/_models/message';
+import { User } from 'src/app/_models/user';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { AuthService } from 'src/app/_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
     selector: 'app-member-messages',
@@ -13,8 +14,13 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 export class MemberMessagesComponent implements OnInit, OnDestroy {
     @Input() recipientId: number;
 
+    currentUser: User;
     messages: Message[] = [];
+    newMessage: any = {};
+
+    currentUserSubscription: Subscription;
     messagesSusbcription: Subscription;
+    newMessageSusbcription: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -23,12 +29,23 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
+        this.currentUserSubscription = this.authService
+            .user()
+            .subscribe(user => {
+                this.currentUser = user;
+            });
         this.loadMessages();
     }
 
     ngOnDestroy(): void {
         if (this.messagesSusbcription) {
             this.messagesSusbcription.unsubscribe();
+        }
+        if (this.newMessageSusbcription) {
+            this.newMessageSusbcription.unsubscribe();
+        }
+        if (this.currentUserSubscription) {
+            this.currentUserSubscription.unsubscribe();
         }
     }
 
@@ -39,6 +56,25 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
             .subscribe(
                 messages => {
                     this.messages = messages;
+                },
+                err => {
+                    this.alertify.error(err);
+                }
+            );
+    }
+
+    sendMessage() {
+        const userId = this.authService.decodedToken.nameid;
+        this.newMessageSusbcription = this.userService
+            .sendMessage(userId, {
+                recipientId: this.recipientId,
+                content: this.newMessage.content,
+            })
+            .subscribe(
+                (message: Message) => {
+                    message.sender = this.currentUser;
+                    this.messages.unshift(message);
+                    this.newMessage.content = '';
                 },
                 err => {
                     this.alertify.error(err);

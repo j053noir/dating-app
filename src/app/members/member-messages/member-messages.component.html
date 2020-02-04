@@ -97,17 +97,22 @@
         </ng-template>
     </div>
     <div class="card-footer">
-        <form action="">
+        <form #messageForm="ngForm" (ngSubmit)="sendMessage()">
             <div class="input-group">
                 <input
                     type="text"
-                    name="chatbox"
-                    id="chatbox"
+                    name="content"
+                    [(ngModel)]="newMessage.content"
+                    required
                     class="form-control input-sm"
                     placeholder="Message"
                 />
                 <div class="input-group-append">
-                    <button class="btn btn-primary" title="send">
+                    <button
+                        class="btn btn-primary"
+                        title="send"
+                        [disabled]="!messageForm.valid"
+                    >
                         <i class="fa fa-send"></i>
                     </button>
                 </div>
