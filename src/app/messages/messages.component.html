@@ -51,6 +51,7 @@
                         ? message.recipient.id
                         : message.sender.id
                 ]"
+                [queryParams]="{ tab: 3 }"
             >
                 <td>{{ message.content }}</td>
                 <td>

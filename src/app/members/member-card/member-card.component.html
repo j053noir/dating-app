@@ -9,7 +9,7 @@
             <li class="list-inline-item">
                 <button
                     class="btn btn-secondary"
-                    [routerLink]="['/members/', user.id]"
+                    [routerLink]="['/members', user.id]"
                     title="view profile"
                 >
                     <i class="fa fa-user"></i>
@@ -25,7 +25,12 @@
                 </button>
             </li>
             <li class="list-inline-item">
-                <button class="btn btn-secondary" title="message">
+                <button
+                    class="btn btn-secondary"
+                    [routerLink]="['/members', user.id]"
+                    [queryParams]="{ tab: 3 }"
+                    title="message"
+                >
                     <i class="fa fa-envelope"></i>
                 </button>
             </li>
