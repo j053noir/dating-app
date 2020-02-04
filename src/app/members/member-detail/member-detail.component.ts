@@ -21,11 +21,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
 
     user: User;
-    routeSubscription: Subscription;
     galleryOptions: NgxGalleryOptions[];
     galleryImages: NgxGalleryImage[];
 
+    dataSubscription: Subscription;
     likeSubscription: Subscription;
+    queryParamsSubscription: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -35,9 +36,17 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.routeSubscription = this.route.data.subscribe(data => {
+        this.dataSubscription = this.route.data.subscribe(data => {
             this.user = data.user;
         });
+
+        this.queryParamsSubscription = this.route.queryParams.subscribe(
+            params => {
+                if (params.tab) {
+                    this.selectTab(+params.tab);
+                }
+            }
+        );
 
         this.galleryOptions = [
             {
@@ -54,8 +63,14 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.routeSubscription) {
-            this.routeSubscription.unsubscribe();
+        if (this.dataSubscription) {
+            this.dataSubscription.unsubscribe();
+        }
+        if (this.likeSubscription) {
+            this.likeSubscription.unsubscribe();
+        }
+        if (this.queryParamsSubscription) {
+            this.queryParamsSubscription.unsubscribe();
         }
     }
 
