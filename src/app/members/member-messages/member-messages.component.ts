@@ -27,7 +27,9 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        throw new Error('Method not implemented.');
+        if (this.messagesSusbcription) {
+            this.messagesSusbcription.unsubscribe();
+        }
     }
 
     loadMessages() {
