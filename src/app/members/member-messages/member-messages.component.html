@@ -1,3 +1,117 @@
-<p *ngFor="let message of messages">
-    {{ message.content }}
-</p>
+<div class="card">
+    <div class="card-body">
+        <div *ngIf="messages.length; else noMessages">
+            <ul class="chat">
+                <li
+                    *ngFor="let message of messages"
+                    [ngClass]="
+                        message.sender.id === recipientId ? 'recipient' : 'me'
+                    "
+                >
+                    <!-- from user -->
+                    <div
+                        class="chat-bubble"
+                        *ngIf="message.sender.id === recipientId; else me"
+                    >
+                        <span class="chat-img float-left mr-1">
+                            <img
+                                [src]="
+                                    message.sender.photoUrl ||
+                                    'assets/images/user.png'
+                                "
+                                [alt]="message.sender.knownAs"
+                                class="img-user"
+                            />
+                        </span>
+                        <div class="chat-body">
+                            <div class="header">
+                                <strong class="primary-font">{{
+                                    message.sender.knownAs
+                                }}</strong>
+                                <small class="text-muted float-right info">
+                                    <span
+                                        ><i class="fa fa-clock-o"></i>
+                                        {{ message.dateSent | timeAgo }}</span
+                                    >
+                                    <i
+                                        *ngIf="!message.isRead"
+                                        class="fa fa-check-square-o"
+                                        title="unread"
+                                    ></i>
+                                    <i
+                                        *ngIf="message.isRead"
+                                        class="text-success fa fa-check-square"
+                                        title="read"
+                                    ></i>
+                                </small>
+                            </div>
+                            <p>{{ message.content }}</p>
+                        </div>
+                    </div>
+                    <!-- from me -->
+                    <ng-template #me>
+                        <div class="chat-bubble">
+                            <div class="chat-body">
+                                <div class="header">
+                                    <strong class="primary-font">{{
+                                        message.sender.knownAs
+                                    }}</strong>
+                                    <small class="text-muted float-right info">
+                                        <span
+                                            ><i class="fa fa-clock-o"></i>
+                                            {{
+                                                message.dateSent | timeAgo
+                                            }}</span
+                                        >
+                                        <i
+                                            *ngIf="!message.isRead"
+                                            class="fa fa-check-square-o"
+                                            title="unread"
+                                        ></i>
+                                        <i
+                                            *ngIf="message.isRead"
+                                            class="text-success fa fa-check-square"
+                                            title="read"
+                                        ></i>
+                                    </small>
+                                </div>
+                                <p>{{ message.content }}</p>
+                            </div>
+                            <span class="chat-img">
+                                <img
+                                    [src]="
+                                        message.sender.photoUrl ||
+                                        'assets/images/user.png'
+                                    "
+                                    [alt]="message.sender.knownAs"
+                                    class="img-user"
+                                />
+                            </span>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+        </div>
+        <ng-template #noMessages>
+            <p>No messages between you and this user.</p>
+        </ng-template>
+    </div>
+    <div class="card-footer">
+        <form action="">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="chatbox"
+                    id="chatbox"
+                    class="form-control input-sm"
+                    placeholder="Message"
+                />
+                <div class="input-group-append">
+                    <button class="btn btn-primary" title="send">
+                        <i class="fa fa-send"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
