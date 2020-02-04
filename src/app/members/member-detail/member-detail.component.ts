@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TabsetComponent } from 'ngx-bootstrap';
 import {
     NgxGalleryAnimation,
     NgxGalleryImage,
@@ -7,6 +8,9 @@ import {
 } from 'ngx-gallery';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/_models/user';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { AuthService } from 'src/app/_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
     selector: 'app-member-detail',
@@ -14,12 +18,21 @@ import { User } from 'src/app/_models/user';
     styleUrls: ['./member-detail.component.scss'],
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
+    @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
+
     user: User;
     routeSubscription: Subscription;
     galleryOptions: NgxGalleryOptions[];
     galleryImages: NgxGalleryImage[];
 
-    constructor(private route: ActivatedRoute) {}
+    likeSubscription: Subscription;
+
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+        private alertify: AlertifyService,
+        private route: ActivatedRoute
+    ) {}
 
     ngOnInit() {
         this.routeSubscription = this.route.data.subscribe(data => {
@@ -44,6 +57,26 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
         }
+    }
+
+    sendLike(likeeId: number) {
+        const userId = this.authService.decodedToken.nameid;
+        this.likeSubscription = this.userService
+            .sendLike(userId, likeeId)
+            .subscribe(
+                res => {
+                    this.alertify.success(
+                        `You have liked: ${this.user.knownAs}`
+                    );
+                },
+                err => {
+                    this.alertify.error(err);
+                }
+            );
+    }
+
+    selectTab(tabId: number) {
+        this.memberTabs.tabs[tabId].active = true;
     }
 
     getImages() {

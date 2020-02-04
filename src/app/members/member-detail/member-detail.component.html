@@ -31,10 +31,18 @@
                     </div>
                     <div class="card-footer">
                         <ul class="btn-group d-flex pl-0">
-                            <button class="btn btn-secondary" title="like">
+                            <button
+                                class="btn btn-secondary"
+                                title="like"
+                                (click)="sendLike(user.id)"
+                            >
                                 <i class="fa fa-heart"></i>
                             </button>
-                            <button class="btn btn-primary" title="message">
+                            <button
+                                class="btn btn-primary"
+                                title="message"
+                                (click)="selectTab(3)"
+                            >
                                 <i class="fa fa-envelope"></i>
                             </button>
                         </ul>
@@ -44,8 +52,8 @@
         </div>
         <div class="col-sm-8">
             <div class="tab-panel">
-                <tabset class="member-tabset">
-                    <tab heading="About {{ user.knownAs }}">
+                <tabset class="member-tabset" #memberTabs>
+                    <tab heading="About {{ user.knownAs }}" id>
                         <h4>Description</h4>
                         <p>
                             {{
