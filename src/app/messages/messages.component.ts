@@ -19,6 +19,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
     routeSubscription: Subscription;
     messagesSubscription: Subscription;
+    deleteSubscription: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -37,6 +38,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
+        }
+        if (this.messagesSubscription) {
+            this.messagesSubscription.unsubscribe();
         }
         if (this.messagesSubscription) {
             this.messagesSubscription.unsubscribe();
@@ -61,6 +65,28 @@ export class MessagesComponent implements OnInit, OnDestroy {
                     this.alertify.error(err);
                 }
             );
+    }
+
+    deleteMessage(id: number) {
+        this.alertify.confirm(
+            'Are you sure you want to delete this message',
+            () => {
+                const userId = this.authService.decodedToken.nameid;
+                this.deleteSubscription = this.userService
+                    .deleteMessage(userId, id)
+                    .subscribe(
+                        res => {
+                            this.messages.splice(
+                                this.messages.findIndex(m => m.id === id)
+                            );
+                            this.alertify.message('Message deleted');
+                        },
+                        err => {
+                            this.alertify.error(err);
+                        }
+                    );
+            }
+        );
     }
 
     pageChanged(event: any) {
