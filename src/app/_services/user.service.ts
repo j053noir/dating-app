@@ -146,4 +146,10 @@ export class UserService {
     deleteMessage(userId: number, id: number) {
         return this.http.delete(`${this.baseUrl}/${userId}/messages/${id}`);
     }
+
+    markAsRead(userId: number, id: number) {
+        return this.http.delete(
+            `${this.baseUrl}/${userId}/messages/${id}/read`
+        );
+    }
 }
