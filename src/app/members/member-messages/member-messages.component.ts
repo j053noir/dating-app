@@ -14,11 +14,9 @@ import { UserService } from 'src/app/_services/user.service';
 export class MemberMessagesComponent implements OnInit, OnDestroy {
     @Input() recipientId: number;
 
-    currentUser: User;
     messages: Message[] = [];
     newMessage: any = {};
 
-    currentUserSubscription: Subscription;
     messagesSusbcription: Subscription;
     newMessageSusbcription: Subscription;
 
@@ -29,11 +27,6 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.currentUserSubscription = this.authService
-            .user()
-            .subscribe(user => {
-                this.currentUser = user;
-            });
         this.loadMessages();
     }
 
@@ -43,9 +36,6 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
         }
         if (this.newMessageSusbcription) {
             this.newMessageSusbcription.unsubscribe();
-        }
-        if (this.currentUserSubscription) {
-            this.currentUserSubscription.unsubscribe();
         }
     }
 
@@ -72,7 +62,6 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
             })
             .subscribe(
                 (message: Message) => {
-                    message.sender = this.currentUser;
                     this.messages.unshift(message);
                     this.newMessage.content = '';
                 },
