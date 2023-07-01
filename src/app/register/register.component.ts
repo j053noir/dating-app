@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const adultAge = new Date().setFullYear(new Date().getFullYear() - 18);
         this.bsConfig = {
-            containerClass: 'theme-green',
+            containerClass: 'theme-blue',
             maxDate: new Date(adultAge),
         };
         this.createRegisterForm();
@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             this.registerSubscription = this.authService
                 .register(this.user)
                 .pipe(
-                    switchMap(response => {
+                    switchMap((response) => {
                         if (response && response.id != null) {
                             return this.authService.login({
                                 username: this.user.username,
@@ -103,7 +103,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
                         );
                         this.router.navigate(['/members']);
                     },
-                    err => {
+                    (err) => {
                         this.alertifyService.error(err);
                     }
                 );
